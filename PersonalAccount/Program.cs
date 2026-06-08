@@ -18,15 +18,15 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
-    {
-        options.LoginPath = "/Account/Login";
-        options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
-        options.SlidingExpiration = true;
-    });
+	.AddCookie(options =>
+	{
+		options.LoginPath = "/Account/Login";
+		options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+		options.SlidingExpiration = true;
+	});
 builder.Services.AddAuthorization();
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite(
-    builder.Configuration.GetConnectionString("SqliteDefaultConnection"))
+	builder.Configuration.GetConnectionString("SqliteDefaultConnection"))
 );
 
 // Options
@@ -35,10 +35,11 @@ builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("Smtp"
 // Services
 builder.Services.AddScoped<IStudentAuthService, StudentAuthService>();
 builder.Services.AddScoped<IStudentProfileService, StudentProfileService>();
+builder.Services.AddScoped<IStudentService, StudentService>(); 
 builder.Services.AddScoped<ISmtpClientService, SmtpClientService>();
 builder.Services.AddScoped<IConfirmationTokenService, ConfirmationTokenService>();
 if (builder.Environment.IsDevelopment())
-    builder.Services.AddScoped<DbBootstrap>();
+	builder.Services.AddScoped<DbBootstrap>();
 
 // Repositories
 builder.Services.AddScoped<IStudentRepo<StudentAuthModel>, StudentRepo<StudentAuthModel>>();
@@ -58,15 +59,15 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    using var scope = app.Services.CreateScope();
-    var bootstrap = scope.ServiceProvider.GetRequiredService<DbBootstrap>();
-    await bootstrap.SeedAsync();
+	using var scope = app.Services.CreateScope();
+	var bootstrap = scope.ServiceProvider.GetRequiredService<DbBootstrap>();
+	await bootstrap.SeedAsync();
 }
 else
 {
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+	app.UseExceptionHandler("/Home/Error");
+	// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+	app.UseHsts();
 }
 
 app.UseHttpsRedirection();
@@ -78,9 +79,9 @@ app.UseAuthorization();
 app.MapStaticAssets();
 
 app.MapControllerRoute(
-        name: "default",
-        pattern: "{controller=Home}/{action=Index}/{id?}")
-    .WithStaticAssets();
+		name: "default",
+		pattern: "{controller=Home}/{action=Index}/{id?}")
+	.WithStaticAssets();
 
 
 app.Run();

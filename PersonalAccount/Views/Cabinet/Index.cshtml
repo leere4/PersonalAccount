@@ -1,0 +1,30 @@
+﻿@model PersonalAccount.Models.Student.StudentModel
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                @if (Model.PhotoUrl != null)
+                {
+                    <img class="card-img-top" src="@Model.PhotoUrl" alt="Student Photo" style="max-height: 300px; object-fit: cover;" />
+                }
+                else
+                {
+                    <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center" style="height: 200px;">
+                        <span class="text-white fs-1">Нет фото</span>
+                    </div>
+                }
+                <div class="card-body">
+                    <h3 class="card-title text-center">@Model.FullName</h3>
+                    <p class="card-text text-center fw-bold text-primary">@Model.GroupName</p>
+                    <p class="card-text text-center text-muted">@Model.Email</p>
+                </div>
+            </div>
+
+            
+            <form method="get" asp-controller="Cabinet" asp-action="Edit" class="mt-3">
+                <button type="submit" class="btn btn-warning w-100">Редактировать</button>
+            </form>
+        </div>
+    </div>
+</div>
