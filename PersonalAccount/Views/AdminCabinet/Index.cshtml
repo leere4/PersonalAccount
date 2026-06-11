@@ -1,4 +1,4 @@
-﻿@model AdminCabinetViewModel
+﻿@model PersonalAccount.ViewModels.AdminCabinetViewModel
 
 <div class="container d-flex flex-column gap-2">
     <header>
@@ -10,7 +10,6 @@
             <div class="card" style="width: 400px">
                 <div class="card-img-top"
                      style="background-image: url(@student.PhotoUrl); background-size: cover; height: 300px">
-
                 </div>
                 <header class="card-header">
                     <h3 class="text-center">@student.FullName</h3>
@@ -18,9 +17,27 @@
 
                 <main class="card-body">
                     <p class="text-start fw-bold">@student.GroupName</p>
-                    <div class="d-flex gap-2">
+                    <div class="d-flex gap-2 align-items-center">
                         <span class="text-start text-primary nav-link" href="@student.Email">@student.Email</span>
+                        
+                        @if (student.IsEmailConfirmed)
+                        {
+                            <span class="badge bg-success">Почта подтверждена</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-warning text-dark">Почта не подтверждена</span>
+                        }
                     </div>
+                    
+               
+                    @if (!student.IsEmailConfirmed)
+                    {
+                        <form method="post" asp-controller="AdminCabinet" asp-action="ConfirmStudentEmail" class="mt-2">
+                            <input type="hidden" name="id" value="@student.AccountId" />
+                            <button type="submit" class="btn btn-sm btn-outline-primary">Подтвердить почту</button>
+                        </form>
+                    }
                 </main>
             </div>
         }
