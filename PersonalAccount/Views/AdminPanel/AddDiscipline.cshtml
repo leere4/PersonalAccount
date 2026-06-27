@@ -1,0 +1,23 @@
+﻿@model AddDisciplineViewModel
+@{
+    ViewData["Title"] = "Добавление дисциплины";
+}
+
+<div class="container d-flex align-content-center justify-content-center">
+    <div class="card w-50">
+        <header class="card-header">
+            <h1 class="text-center">Новая дисциплина</h1>
+        </header>
+        <form class="card-body" method="post">
+            <div class="alert alert-danger" asp-validation-summary="ModelOnly"></div>
+
+            <div class="mb-3">
+                <label class="form-label" asp-for="Name"></label>
+                <input class="form-control" asp-for="Name" autocomplete="off" />
+                <span class="text-danger small" asp-validation-for="Name"></span>
+            </div>
+
+            <button class="btn btn-primary w-100" type="submit">Создать</button>
+        </form>
+    </div>
+</div>
