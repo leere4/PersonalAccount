@@ -1,69 +1,153 @@
 ﻿@model AdminPanelViewModel
 
-<div class="container d-flex flex-column gap-2">
+<div class="container d-flex flex-column gap-4">
     <header>
         <h1 class="text-start">Панель администратора</h1>
     </header>
-    <div class="d-flex flex-column gap-4 align-items-stretch">
+
+  
+    <div class="d-flex flex-column gap-3 align-items-stretch border p-3 rounded">
         <div class="d-grid gap-2" style="grid-template-columns: 4fr 1fr">
-            <div class="text-primary">
-                <h2>Студенты</h2>
-            </div>
-            <form method="get" asp-action="RegisterStudent">
-                <button class="btn btn-outline-primary w-100 h-100" type="submit">Добавить студента</button>
+            <h2 class="text-primary mb-0">Группы</h2>
+            <form method="get" asp-action="AddGroup">
+                <button class="btn btn-outline-primary w-100 h-100" type="submit">Добавить группу</button>
             </form>
         </div>
-        <div class="container w-100 d-flex flex-wrap flex-fill gap-4">
-            @foreach (var student in Model.Students)
+        <div class="d-flex flex-wrap gap-2">
+            @foreach (var group in Model.Groups)
             {
-                <div class="card" style="width: 300px">
-                    <div class="card-img-top"
-                         style="background-image: url(@student.PhotoUrl); background-size: cover; height: 100px">
-
-                    </div>
-                    <header class="card-header">
-                        <h3 class="text-center">@student.FullName</h3>
-                    </header>
-
-                    <main class="card-body">
-                        <p class="text-start fw-bold">@student.GroupName</p>
-                        <span class="text-start text-primary nav-link" href="@student.Email">@student.Email</span>
-                    </main>
+                <div class="card p-2 d-flex align-items-center gap-2" style="min-width: 200px;">
+                    <span class="fw-bold">@group.Name</span>
+                    @if (group.Id != -1) 
+                    {
+                        <form asp-action="DeleteGroup" method="post" class="ms-auto">
+                            <input type="hidden" name="groupId" value="@group.Id" />
+                            <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Удалить группу и открепить студентов?')">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </form>
+                    }
                 </div>
             }
         </div>
     </div>
 
-    <div class="d-flex flex-column gap-4 align-items-stretch">
+   
+    <div class="d-flex flex-column gap-3 align-items-stretch border p-3 rounded">
         <div class="d-grid gap-2" style="grid-template-columns: 4fr 1fr">
-            <div class="text-primary">
-                <h2>Преподаватели</h2>
-            </div>
-            <form method="get" asp-action="RegisterTeacher">
-                <button class="btn btn-outline-primary w-100 h-100" type="submit">Добавить преподавателя</button>
+            <h2 class="text-primary mb-0">Дисциплины</h2>
+            <form method="get" asp-action="AddDiscipline">
+                <button class="btn btn-outline-primary w-100 h-100" type="submit">Добавить дисциплину</button>
             </form>
         </div>
-        <div class="container w-100 d-flex flex-wrap flex-fill gap-4">
-            @foreach (var teacher in Model.Teachers)
+        <div class="d-flex flex-wrap gap-2">
+            @foreach (var discipline in Model.Disciplines)
             {
-                <div class="card" style="width: 300px">
-                    <div class="card-img-top"
-                         style="background-image: url(@teacher.PhotoUrl); background-size: cover; height: 100px">
-
-                    </div>
-                    <header class="card-header">
-                        <h3 class="text-center">@teacher.FullName</h3>
-                    </header>
-
-                    <main class="card-body">
-                        <span class="text-start text-primary nav-link" href="@teacher.Email">@teacher.Email</span>
-                    </main>
-                    <form class="card-footer" asp-action="EditTeacher" method="get">
-                        <input type="hidden" name="teacherAccountId" value="@teacher.AccountId"/>
-                        <button class="btn btn-outline-secondary"><i class="bi bi-pencil-square"></i></button>
+                <div class="card p-2 d-flex align-items-center gap-2" style="min-width: 200px;">
+                    <span class="fw-bold">@discipline.Name</span>
+                    <form asp-action="DeleteDiscipline" method="post" class="ms-auto">
+                        <input type="hidden" name="disciplineId" value="@discipline.Id" />
+                        <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Удалить дисциплину?')">
+                            <i class="bi bi-trash"></i>
+                        </button>
                     </form>
                 </div>
             }
         </div>
     </div>
+
+
+
+    <div class="d-flex flex-column gap-4 align-items-stretch">
+        <div class="d-grid gap-2" style="grid-template-columns: 4fr 1fr">
+            <h2 class="text-primary mb-0">Студенты</h2>
+            <form method="get" asp-action="RegisterStudent">
+                <button class="btn btn-outline-primary w-100 h-100" type="submit">Добавить студента</button>
+            </form>
+        </div>
+
+        <div class="container w-100 d-flex flex-wrap flex-fill gap-4">
+            @if (Model.Students.Any())
+            {
+                @foreach (var student in Model.Students)
+                {
+                    <div class="card" style="width: 300px">
+                        <div class="card-img-top" style="background-image: url(@student.PhotoUrl); background-size: cover; height: 100px"></div>
+                        <header class="card-header d-flex justify-content-between align-items-center">
+                            <h3 class="text-center mb-0">@student.FullName</h3>
+                            <form asp-action="DeleteStudent" method="post">
+                                <input type="hidden" name="accountId" value="@student.AccountId" />
+                                <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Точно удалить студента?')">
+                                    <i class="bi bi-person-x"></i>
+                                </button>
+                            </form>
+                        </header>
+
+                        <main class="card-body">
+                       
+                            <form asp-action="ChangeStudentGroup" method="post" class="d-flex gap-2 mb-2">
+                                <input type="hidden" name="studentAccountId" value="@student.AccountId" />
+                                <select name="groupId" class="form-select form-select-sm">
+                                    @foreach (var group in Model.Groups)
+                                    {
+                                        var isSelected = student.GroupId == group.Id ? "selected" : "";
+                                        <!option value="@group.Id" @isSelected>@group.Name</!option>
+                                    }
+                                </select>
+                                <button type="submit" class="btn btn-sm btn-outline-success">Сменить</button>
+                            </form>
+
+                            <span class="text-start text-primary nav-link" href="@student.Email">@student.Email</span>
+                        </main>
+                    </div>
+                }
+            }
+            else
+            {
+                <p class="text-muted">Список студентов пуст. Добавьте первого студента.</p>
+            }
+        </div>
+    </div>
+
+    <div class="d-flex flex-column gap-4 align-items-stretch">
+        <div class="d-grid gap-2" style="grid-template-columns: 4fr 1fr">
+            <h2 class="text-primary mb-0">Преподаватели</h2>
+            <form method="get" asp-action="RegisterTeacher">
+                <button class="btn btn-outline-primary w-100 h-100" type="submit">Добавить преподавателя</button>
+            </form>
+        </div>
+        <div class="container w-100 d-flex flex-wrap flex-fill gap-4">
+            @if (Model.Teachers.Any())
+            {
+                @foreach (var teacher in Model.Teachers)
+                {
+                    <div class="card" style="width: 300px">
+                        <div class="card-img-top" style="background-image: url(@teacher.PhotoUrl); background-size: cover; height: 100px"></div>
+                        <header class="card-header d-flex justify-content-between align-items-center">
+                            <h3 class="text-center mb-0">@teacher.FullName</h3>
+                            <form asp-action="DeleteTeacher" method="post">
+                                <input type="hidden" name="accountId" value="@teacher.AccountId" />
+                                <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Точно удалить преподавателя?')">
+                                    <i class="bi bi-person-x"></i>
+                                </button>
+                            </form>
+                        </header>
+
+                        <main class="card-body">
+                            <span class="text-start text-primary nav-link" href="@teacher.Email">@teacher.Email</span>
+                        </main>
+                        <form class="card-footer" asp-action="EditTeacher" method="get">
+                            <input type="hidden" name="teacherAccountId" value="@teacher.AccountId" />
+                            <button class="btn btn-outline-secondary"><i class="bi bi-pencil-square"></i> Редактировать</button>
+                        </form>
+                    </div>
+                }
+            }
+            else
+            {
+                <p class="text-muted">Список преподавателей пуст. Добавьте первого преподавателя.</p>
+            }
+        </div>
+    </div>
 </div>
+            
